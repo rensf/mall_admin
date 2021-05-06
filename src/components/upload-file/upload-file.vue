@@ -8,9 +8,10 @@
         height: uploadHeight + 'px',
         lineHeight: uploadHeight + 'px',
       }"
-      v-for="item in imgList"
+      v-for="item in list"
     >
-      <img :src="item.url" />
+      <img :src="viewUrl + item" />
+      <Icon type="md-close" @click="handleDelete"></Icon>
     </div>
     <Input v-if="!showList" class="upload-input" v-model="value"></Input>
     <Upload
@@ -64,16 +65,12 @@ export default {
       default: "md-add",
     },
     text: "",
-  },
-  data() {
-    return {
-      imgList: this.list ? this.list : [],
-    };
+    viewUrl: "",
   },
   methods: {
     handleBeforeUpload() {
-      if (this.maxLength) {
-        const check = this.imgList.length < this.maxLength;
+      if (this.maxLength && this.list) {
+        const check = this.list.length < this.maxLength;
         if (!check) {
           this.$Notice.warning({
             title: "文件数量超过限制！",
@@ -93,11 +90,11 @@ export default {
       });
     },
     handleSuccess(res) {
-      this.imgList.push({
-        url: "/api/product/viewProductImage/" + res.result,
-      });
-      this.$emit("upload-success", res.result)
+      this.$emit("upload-success", res.result);
     },
+    handleDelete() {
+      
+    }
   },
 };
 </script>
@@ -105,21 +102,31 @@ export default {
 <style lang="less" scoped>
 .upload {
   display: flex;
+  position: relative;
 
   &-image {
     display: inline-block;
     text-align: center;
-    border: 1px solid transparent;
+    border: 0 dashed transparent;
     border-radius: 4px;
     overflow: hidden;
     background: #fff;
-    position: relative;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-    margin-right: 4px;
+    margin-right: 10px;
 
     img {
       width: 100%;
       height: 100%;
+      border-radius: 4px;
+    }
+
+    i {
+      position: absolute;
+      top: -4px;
+      left: 50px;
+      border-radius: 50%;
+      background: #fff9b6;
+      cursor: pointer;
     }
   }
 

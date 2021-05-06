@@ -19,7 +19,7 @@
       ></Page>
     </div>
     <Modal
-      :styles="{ top: '50px' }"
+      :styles="{ top: '30px' }"
       title="添加产品"
       v-model="showModal"
       :mask-closable="false"
@@ -76,13 +76,33 @@
             placeholder="请输入产品描述"
           ></Input>
         </FormItem>
-        <FormItem label="产品图片" prop="imageIds">
+        <FormItem label="产品图片">
           <Upload-File
             type="drag"
-            :list="productForm.imageIds"
+            :list="productForm.images"
             :show-upload-list="false"
+            view-url="/api/product/viewProductImage/"
             action="/api/product/uploadProductImage"
             @upload-success="handleSuccess"
+          ></Upload-File>
+        </FormItem>
+        <FormItem label="是否首推">
+          <Switch
+            v-model="productForm.productFirst"
+            :true-value="1"
+            :false-value="0"
+            @on-change="isFirst"
+          ></Switch>
+        </FormItem>
+        <FormItem v-if="productForm.productFirst" label="首页图片">
+          <Upload-File
+            type="drag"
+            :list="productForm.homeImages"
+            :max-length="1"
+            :show-upload-list="false"
+            view-url="/api/product/viewProductImage/"
+            action="/api/product/uploadProductImage"
+            @upload-success="handleHomeSuccess"
           ></Upload-File>
         </FormItem>
       </Form>
@@ -133,6 +153,12 @@ export default {
         {
           title: "产品售价",
           key: "productPrice",
+          align: "center",
+          width: 100,
+        },
+        {
+          title: "优惠售价",
+          key: "productFPrice",
           align: "center",
           width: 100,
         },
@@ -220,12 +246,23 @@ export default {
     },
     updateProduct(v) {
       this.productForm = JSON.parse(JSON.stringify(v));
+
       if (this.productForm.typeId)
         this.productForm.typeIds = this.productForm.typeId.split(",");
       else this.productForm.typeIds = [];
+
+      if (this.productForm.image) {
+        this.productForm.images = this.productForm.image.split(",");
+      } else this.productForm.images = [];
+
+      if (this.productForm.homeImage) {
+        this.productForm.homeImages = this.productForm.homeImage.split(",");
+      } else this.productForm.homeImages = [];
+
       this.showModal = true;
     },
     confirmCommit() {
+      console.log(this.productForm);
       if (this.productForm.productId) {
         this.$putRequest("/product/updateProduct", this.productForm).then(
           (res) => {
@@ -233,6 +270,8 @@ export default {
               this.showModal = false;
               this.queryProduct();
               this.$refs["productForm"].resetFields();
+              this.productForm.images = [];
+              this.productForm.productFirst = 0;
             }
           }
         );
@@ -243,6 +282,8 @@ export default {
               this.showModal = false;
               this.queryProduct();
               this.$refs["productForm"].resetFields();
+              this.productForm.images = [];
+              this.productForm.productFirst = 0;
             }
           }
         );
@@ -251,10 +292,21 @@ export default {
     cancelCommit() {
       this.showModal = false;
       this.$refs["productForm"].resetFields();
+      this.productForm.images = [];
+      this.productForm.productFirst = 0;
+    },
+    isFirst(res) {
+      if (!res) {
+        this.productForm.homeImages = [];
+      }
     },
     handleSuccess(res) {
-      if (!this.productForm.imageIds) this.productForm.imageIds = [];
-      this.productForm.imageIds.push(res.substring(0, res.indexOf(".") - 1));
+      if (!this.productForm.images) this.productForm.images = [];
+      this.productForm.images.push(res);
+    },
+    handleHomeSuccess(res) {
+      if (!this.productForm.homeImages) this.productForm.homeImages = [];
+      this.productForm.homeImages.push(res);
     },
   },
 };
