@@ -7,10 +7,22 @@
     </div>
     <div class="content">
       <Card title="产品分类">
-        <Tree :data="data" expand-node></Tree>
+        <Tree :data="data" @on-contextmenu="handleContextMenu" expand-node>
+          <template slot="contextMenu">
+            <DropdownItem @click.native="updateType">编辑</DropdownItem>
+            <DropdownItem @click.native="deleteType" style="color: #ed4014">
+              删除
+            </DropdownItem>
+          </template>
+        </Tree>
       </Card>
     </div>
-    <Modal title="添加产品分类" v-model="showModal">
+    <Modal
+      :styles="{ top: '30px' }"
+      :title="modalTitle"
+      v-model="showModal"
+      :mask-closable="false"
+    >
       <Form
         ref="typeForm"
         :model="typeForm"
@@ -98,10 +110,12 @@ export default {
       type: [],
       data: [],
       typeForm: {},
+      modalTitle: "",
       showModal: false,
+      contextData: null,
     };
   },
-  created() {
+  mounted() {
     this.queryType();
   },
   methods: {
@@ -113,20 +127,36 @@ export default {
           map[item["productTypeId"]] = item;
           item.title = item.typeName;
         });
-        this.data = array2Tree(this.type, map, "typeParent");
+        this.data = array2Tree(this.type, map, "typeParent", true);
       });
     },
     addType() {
+      this.modalTitle = "添加产品类型";
       this.showModal = true;
     },
     confirmCommit() {
-      if (this.typeForm.product_type_id) {
+      if (this.typeForm.productTypeId) {
+        // 一级类型，将父id置空
+        if (this.typeForm.typeLevel === "1") {
+          this.typeForm.typeParent = "";
+        }
+        this.$putRequest("/product/updateProductType", this.typeForm).then(
+          (res) => {
+            if (res.data.result) {
+              this.queryType();
+              this.showModal = false;
+              this.modalTitle = "";
+              this.$refs["typeForm"].resetFields();
+            }
+          }
+        );
       } else {
         this.$postRequest("/product/addProductType", this.typeForm).then(
           (res) => {
             if (res.data.result) {
               this.queryType();
               this.showModal = false;
+              this.modalTitle = "";
               this.$refs["typeForm"].resetFields();
             }
           }
@@ -135,7 +165,33 @@ export default {
     },
     cancelCommit() {
       this.showModal = false;
+      this.modalTitle = "";
       this.$refs["typeForm"].resetFields();
+    },
+    handleContextMenu(data) {
+      this.contextData = data;
+      console.log(data)
+    },
+    updateType() {
+      this.modalTitle = "更新产品类型";
+      this.showModal = true;
+      this.typeForm = this.contextData;
+    },
+    deleteType() {
+      this.$Modal.confirm({
+        title: "确认删除",
+        content: "您确认要删除该记录吗?",
+        onOk: () => {
+          this.$deleteRequest(
+            "/product/deleteProductType",
+            this.contextData
+          ).then((res) => {
+            if (res.data.result) {
+              this.queryType();
+            }
+          });
+        },
+      });
     },
   },
 };

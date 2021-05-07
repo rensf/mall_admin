@@ -11,7 +11,7 @@
       v-for="item in list"
     >
       <img :src="viewUrl + item" />
-      <Icon type="md-close" @click="handleDelete"></Icon>
+      <Icon type="md-close" @click="handleDelete(item)"></Icon>
     </div>
     <Input v-if="!showList" class="upload-input" v-model="value"></Input>
     <Upload
@@ -66,6 +66,7 @@ export default {
     },
     text: "",
     viewUrl: "",
+    deleteUrl: "",
   },
   methods: {
     handleBeforeUpload() {
@@ -92,9 +93,19 @@ export default {
     handleSuccess(res) {
       this.$emit("upload-success", res.result);
     },
-    handleDelete() {
-      
-    }
+    handleDelete(req) {
+      this.$Modal.confirm({
+        title: "确认删除",
+        content: "您确认要删除该张图片吗?",
+        onOk: () => {
+          this.$deleteRequest(this.deleteUrl + req).then((res) => {
+            if (res.data.result) {
+              this.list.splice(this.list.indexOf(req), 1);
+            }
+          });
+        },
+      });
+    },
   },
 };
 </script>

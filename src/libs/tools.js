@@ -219,11 +219,16 @@ export const objEqual = (obj1, obj2) => {
  * @param {Array} arr 数组
  * @param {String} map 子ID的集合
  * @param {String} pidKey 父ID的键
+ * @param {Boolean} contextmenu 开启右键菜单
  */
-export const array2Tree = (arr, map, pidKey) => {
+export const array2Tree = (arr, map, pidKey, contextmenu) => {
   if (!Array.isArray(arr) || !arr.length) return
   let tree = []
   arr.forEach(item => {
+    // 是否支持右键菜单
+    if (contextmenu) {
+      item.contextmenu = contextmenu
+    }
     const parent = map[item[pidKey]]
     if (parent) {
       (parent.children || (parent.children = [])).push(item)

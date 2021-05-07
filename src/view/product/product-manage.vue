@@ -20,7 +20,7 @@
     </div>
     <Modal
       :styles="{ top: '30px' }"
-      title="添加产品"
+      :title="modalTitle"
       v-model="showModal"
       :mask-closable="false"
       @on-cancel="cancelCommit"
@@ -82,6 +82,7 @@
             :list="productForm.images"
             :show-upload-list="false"
             view-url="/api/product/viewProductImage/"
+            delete-url="/product/deleteProductImage/"
             action="/api/product/uploadProductImage"
             @upload-success="handleSuccess"
           ></Upload-File>
@@ -101,6 +102,7 @@
             :max-length="1"
             :show-upload-list="false"
             view-url="/api/product/viewProductImage/"
+            delete-url="/api/product/deleteProductImage/"
             action="/api/product/uploadProductImage"
             @upload-success="handleHomeSuccess"
           ></Upload-File>
@@ -210,6 +212,7 @@ export default {
       data: [],
       type: [],
       productForm: {},
+      modalTitle: "",
       showModal: false,
       queryForm: {
         current: 1,
@@ -218,7 +221,7 @@ export default {
       },
     };
   },
-  created() {
+  mounted() {
     this.queryProductType();
     this.queryProduct();
   },
@@ -242,6 +245,7 @@ export default {
       );
     },
     addProduct() {
+      this.modalTitle = "添加产品";
       this.showModal = true;
     },
     updateProduct(v) {
@@ -259,10 +263,10 @@ export default {
         this.productForm.homeImages = this.productForm.homeImage.split(",");
       } else this.productForm.homeImages = [];
 
+      this.modalTitle = "更新产品信息";
       this.showModal = true;
     },
     confirmCommit() {
-      console.log(this.productForm);
       if (this.productForm.productId) {
         this.$putRequest("/product/updateProduct", this.productForm).then(
           (res) => {
@@ -280,6 +284,7 @@ export default {
           (res) => {
             if (res.data.result) {
               this.showModal = false;
+              this.modalTitle = "";
               this.queryProduct();
               this.$refs["productForm"].resetFields();
               this.productForm.images = [];
@@ -291,6 +296,7 @@ export default {
     },
     cancelCommit() {
       this.showModal = false;
+      this.modalTitle = "";
       this.$refs["productForm"].resetFields();
       this.productForm.images = [];
       this.productForm.productFirst = 0;

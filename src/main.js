@@ -6,7 +6,7 @@ import router from './router'
 import store from './store'
 import iView from 'view-design'
 import config from '@/config'
-import { postRequest, putRequest, getRequest } from '@/api'
+import { postRequest, putRequest, deleteRequest, getRequest } from '@/api'
 import importDirective from '@/directive'
 import { directive as clickOutside } from 'v-click-outside-x'
 import './index.less'
@@ -27,6 +27,7 @@ Vue.prototype.$config = config
  */
 Vue.prototype.$postRequest = postRequest
 Vue.prototype.$putRequest = putRequest
+Vue.prototype.$deleteRequest = deleteRequest
 Vue.prototype.$getRequest = getRequest
 /**
  * 注册指令
