@@ -2,11 +2,9 @@
   <div>
     <div class="header">
       <div class="action">
-        <Input class="action-250" placeholder="请输入产品名称"></Input>
-        <Button class="action-btn" type="primary">查询</Button>
-        <Button class="action-btn" type="success" @click="addProduct"
-          >添加</Button
-        >
+        <Input class="action-250" placeholder="请输入产品名称" v-model="queryForm.productName"></Input>
+        <Button class="action-btn" type="primary" @click="queryProduct">查询</Button>
+        <Button class="action-btn" type="success" @click="addProduct">添加</Button>
       </div>
     </div>
     <div class="content">
