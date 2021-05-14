@@ -66,6 +66,25 @@ export default [{
     }]
   },
   {
+    path: '/config',
+    name: 'config',
+    meta: {
+      hideInBread: true,
+      icon: 'md-settings',
+      title: '配置管理'
+    },
+    component: Main,
+    children: [{
+      path: 'config_manage',
+      name: 'config_manage',
+      meta: {
+        icon: 'md-settings',
+        title: '配置管理'
+      },
+      component: () => import('@/view/config/config-manage.vue')
+    }]
+  },
+  {
     path: '/product',
     name: 'product',
     meta: {

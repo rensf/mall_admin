@@ -166,6 +166,7 @@ export default {
           title: "产品描述",
           key: "productDetail",
           align: "center",
+          minWidth: 200,
           tooltip: true,
         },
         {
