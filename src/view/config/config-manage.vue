@@ -2,12 +2,18 @@
   <div>
     <div class="header">
       <div class="action">
-        <Input class="action-250" placeholder="请输入模块名称"></Input>
-        <Button class="action-btn" type="primary">查询</Button>
+        <Input class="action-250" placeholder="请输入模块名称" v-model="queryForm.application"></Input>
+        <Button class="action-btn" type="primary" @click="queryConfig">查询</Button>
+        <Button class="action-btn" type="success" @click="addConfig">添加</Button>
       </div>
     </div>
     <div class="content">
-      <Table :columns="columns" :data="data" border></Table>
+      <Table
+        :columns="columns"
+        :data="data"
+        @on-row-dblclick="updateConfig"
+        border
+      ></Table>
       <Page
         class="page"
         :page-size="queryForm.size"
@@ -15,6 +21,49 @@
         :current="queryForm.current"
       ></Page>
     </div>
+    <Modal
+      :styles="{ top: '30px' }"
+      title="添加配置"
+      v-model="showModal"
+      :mask-closable="false"
+      @on-cancel="cancelCommit"
+    >
+      <Form
+        ref="configForm"
+        :model="configForm"
+        :label-width="80"
+        :label-colon="true"
+      >
+        <FormItem label="系统名称" prop="application">
+          <Input
+            v-model="configForm.application"
+            placeholder="请输入系统名称"
+          ></Input>
+        </FormItem>
+        <FormItem label="系统环境" prop="profile">
+          <Input
+            v-model="configForm.profile"
+            placeholder="请输入系统环境"
+          ></Input>
+        </FormItem>
+        <FormItem label="读取分支" prop="label">
+          <Input
+            v-model="configForm.label"
+            placeholder="请输入读取分支"
+          ></Input>
+        </FormItem>
+        <FormItem label="键" prop="key">
+          <Input v-model="configForm.key" placeholder="请输入键"></Input>
+        </FormItem>
+        <FormItem label="值" prop="value">
+          <Input v-model="configForm.value" placeholder="请输入值"></Input>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <Button @click="cancelCommit">取消</Button>
+        <Button type="primary" @click="confirmCommit">确定</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -105,6 +154,7 @@ export default {
                   on: {
                     click: () => {
                       if (this.editIndex == params.index) {
+                        params.row.value = this.configForm.value;
                         this.saveUpdate(params.row);
                       } else {
                         this.editIndex = params.index;
@@ -126,6 +176,7 @@ export default {
                       if (this.editIndex == params.index) {
                         this.editIndex = -1;
                       } else {
+                        this.deleteConfig();
                       }
                     },
                   },
@@ -159,6 +210,22 @@ export default {
         }
       );
     },
+    addConfig() {
+      this.showModal = true;
+    },
+    confirmCommit() {
+      this.$postRequest("/config/addConfig", this.configForm).then((res) => {
+        this.showModal = false;
+        this.$refs["configForm"].resetFields();
+      });
+    },
+    cancelCommit() {
+      this.showModal = false;
+      this.$refs["configForm"].resetFields();
+    },
+    updateConfig(row, index) {
+      this.editIndex = index;
+    },
     saveUpdate(v) {
       this.configForm.id = v.id;
       this.$putRequest("/config/updateConfig", this.configForm).then(() => {
@@ -170,13 +237,17 @@ export default {
         title: "确认删除",
         content: "您确认要删除该记录吗?",
         onOk: () => {
-          
-        }
-      })
-    }
+          this.$deleteRequest("/config/deleteConfig", this.configForm).then(
+            () => {
+              this.queryConfig();
+            }
+          );
+        },
+      });
+    },
   },
 };
 </script>
 
-<style>
+<style lang="less" scoped>
 </style>

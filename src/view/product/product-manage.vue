@@ -287,6 +287,7 @@ export default {
               this.queryProduct();
               this.$refs["productForm"].resetFields();
               this.productForm.images = [];
+              this.productForm.homeImages = [];
               this.productForm.productFirst = 0;
             }
           }
@@ -298,6 +299,7 @@ export default {
       this.modalTitle = "";
       this.$refs["productForm"].resetFields();
       this.productForm.images = [];
+      this.productForm.homeImages = [];
       this.productForm.productFirst = 0;
     },
     isFirst(res) {
