@@ -5,15 +5,11 @@
         <Input class="action-250" placeholder="请输入模块名称" v-model="queryForm.application"></Input>
         <Button class="action-btn" type="primary" @click="queryConfig">查询</Button>
         <Button class="action-btn" type="success" @click="addConfig">添加</Button>
+        <Button class="action-btn" type="warning" @click="refreshConfig">刷新配置</Button>
       </div>
     </div>
     <div class="content">
-      <Table
-        :columns="columns"
-        :data="data"
-        @on-row-dblclick="updateConfig"
-        border
-      ></Table>
+      <Table :columns="columns" :data="data" @on-row-dblclick="updateConfig" border></Table>
       <Page
         class="page"
         :page-size="queryForm.size"
@@ -28,35 +24,21 @@
       :mask-closable="false"
       @on-cancel="cancelCommit"
     >
-      <Form
-        ref="configForm"
-        :model="configForm"
-        :label-width="80"
-        :label-colon="true"
-      >
+      <Form ref="configForm" :model="configForm" :label-width="80" :label-colon="true">
         <FormItem label="系统名称" prop="application">
-          <Input
-            v-model="configForm.application"
-            placeholder="请输入系统名称"
-          ></Input>
+          <Input v-model="configForm.application" placeholder="请输入系统名称"></Input>
         </FormItem>
         <FormItem label="系统环境" prop="profile">
-          <Input
-            v-model="configForm.profile"
-            placeholder="请输入系统环境"
-          ></Input>
+          <Input v-model="configForm.profile" placeholder="请输入系统环境"></Input>
         </FormItem>
         <FormItem label="读取分支" prop="label">
-          <Input
-            v-model="configForm.label"
-            placeholder="请输入读取分支"
-          ></Input>
+          <Input v-model="configForm.label" placeholder="请输入读取分支"></Input>
         </FormItem>
-        <FormItem label="键" prop="key">
-          <Input v-model="configForm.key" placeholder="请输入键"></Input>
+        <FormItem label="键" prop="configKey">
+          <Input v-model="configForm.configKey" placeholder="请输入键"></Input>
         </FormItem>
-        <FormItem label="值" prop="value">
-          <Input v-model="configForm.value" placeholder="请输入值"></Input>
+        <FormItem label="值" prop="configValue">
+          <Input v-model="configForm.configValue" placeholder="请输入值"></Input>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -92,45 +74,45 @@ export default {
         },
         {
           title: "键",
-          key: "key",
+          key: "configKey",
           align: "center",
           width: 200,
           render: (h, params) => {
             if (params.index === this.editIndex) {
               return h("Input", {
                 props: {
-                  value: params.row.key,
+                  value: params.row.configKey,
                 },
                 on: {
                   input: (v) => {
-                    this.configForm.key = v;
+                    params.row.configKey = v;
                   },
                 },
               });
             } else {
-              return h("span", params.row.key);
+              return h("span", params.row.configKey);
             }
           },
         },
         {
           title: "值",
-          key: "value",
+          key: "configValue",
           align: "center",
           width: 200,
           render: (h, params) => {
             if (params.index === this.editIndex) {
               return h("Input", {
                 props: {
-                  value: params.row.value,
+                  value: params.row.configValue,
                 },
                 on: {
                   input: (v) => {
-                    this.configForm.value = v;
+                    params.row.configValue = v;
                   },
                 },
               });
             } else {
-              return h("span", params.row.value);
+              return h("span", params.row.configValue);
             }
           },
         },
@@ -154,7 +136,6 @@ export default {
                   on: {
                     click: () => {
                       if (this.editIndex == params.index) {
-                        params.row.value = this.configForm.value;
                         this.saveUpdate(params.row);
                       } else {
                         this.editIndex = params.index;
@@ -176,7 +157,7 @@ export default {
                       if (this.editIndex == params.index) {
                         this.editIndex = -1;
                       } else {
-                        this.deleteConfig();
+                        this.deleteConfig(params.row);
                       }
                     },
                   },
@@ -223,25 +204,34 @@ export default {
       this.showModal = false;
       this.$refs["configForm"].resetFields();
     },
+    refreshConfig() {
+      this.$getRequest("/config/refreshConfig").then((res) => {
+        if (res.data === 204) {
+          this.$Notice.success({
+            title: "Tip",
+            desc: "操作成功！",
+            duration: 1,
+          });
+        }
+      });
+    },
     updateConfig(row, index) {
       this.editIndex = index;
     },
     saveUpdate(v) {
-      this.configForm.id = v.id;
+      this.configForm = v;
       this.$putRequest("/config/updateConfig", this.configForm).then(() => {
         this.editIndex = -1;
       });
     },
-    deleteConfig() {
+    deleteConfig(v) {
       this.$Modal.confirm({
         title: "确认删除",
         content: "您确认要删除该记录吗?",
         onOk: () => {
-          this.$deleteRequest("/config/deleteConfig", this.configForm).then(
-            () => {
-              this.queryConfig();
-            }
-          );
+          this.$deleteRequest("/config/deleteConfig", v).then(() => {
+            this.queryConfig();
+          });
         },
       });
     },
