@@ -158,7 +158,7 @@ export default {
         },
         {
           title: "优惠售价",
-          key: "productFPrice",
+          key: "productDiscountPrice",
           align: "center",
           width: 100,
         },
