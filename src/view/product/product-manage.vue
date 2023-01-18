@@ -14,6 +14,7 @@
         :page-size="queryForm.size"
         :total="queryForm.total"
         :current="queryForm.current"
+        show-sizer
       ></Page>
     </div>
     <Modal
@@ -79,9 +80,9 @@
             type="drag"
             :list="productForm.images"
             :show-upload-list="false"
-            view-url="/api/product/viewProductImage/"
-            delete-url="/product/deleteProductImage/"
-            action="/api/product/uploadProductImage"
+            view-url="/api/product/product/viewProductImage/"
+            delete-url="/product/product/deleteProductImage/"
+            action="/api/product/product/uploadProductImage"
             @upload-success="handleSuccess"
           ></Upload-File>
         </FormItem>
@@ -99,9 +100,9 @@
             :list="productForm.homeImages"
             :max-length="1"
             :show-upload-list="false"
-            view-url="/api/product/viewProductImage/"
-            delete-url="/api/product/deleteProductImage/"
-            action="/api/product/uploadProductImage"
+            view-url="/api/product/product/viewProductImage/"
+            delete-url="/api/product/product/deleteProductImage/"
+            action="/api/product/product/uploadProductImage"
             @upload-success="handleHomeSuccess"
           ></Upload-File>
         </FormItem>
@@ -226,18 +227,18 @@ export default {
   },
   methods: {
     queryProductType() {
-      this.$getRequest("/product/queryProductTypeList").then((res) => {
+      this.$getRequest("/product/productType/queryProductTypeList").then((res) => {
         let map = {};
         res.data.result.forEach((item) => {
           map[item["productTypeId"]] = item;
-          item.title = item.typeName;
+          item.title = item.productTypeName;
           item.id = item.productTypeId;
         });
-        this.type = array2Tree(res.data.result, map, "typeParent");
+        this.type = array2Tree(res.data.result, map, "productParentTypeId");
       });
     },
     queryProduct() {
-      this.$getRequest("/product/queryProductList", this.queryForm).then(
+      this.$getRequest("/product/product/queryProductList", this.queryForm).then(
         (res) => {
           this.data = res.data.result.records;
         }
@@ -267,7 +268,7 @@ export default {
     },
     confirmCommit() {
       if (this.productForm.productId) {
-        this.$putRequest("/product/updateProduct", this.productForm).then(
+        this.$putRequest("/product/product/updateProduct", this.productForm).then(
           (res) => {
             if (res.data.result) {
               this.showModal = false;
@@ -279,7 +280,7 @@ export default {
           }
         );
       } else {
-        this.$postRequest("/product/addProduct", this.productForm).then(
+        this.$postRequest("/product/product/addProduct", this.productForm).then(
           (res) => {
             if (res.data.result) {
               this.showModal = false;

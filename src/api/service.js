@@ -10,8 +10,11 @@ const service = axios.create({
 })
 
 service.interceptors.request.use(config => {
-  if (store.state.token)
-    config.headers.token = store.state.token
+  if (store.state.token) {
+    config.headers.Authorization = store.state.token
+  } else {
+    config.headers.Authorization = "Basic bWFsbC1hZG1pbg==" // base64明文：mall-amin
+  }
   return config
 })
 
@@ -29,6 +32,13 @@ service.interceptors.response.use(response => {
       })
     }
     return response
+  } else {
+    let msg = response.data.msg
+    Notice.error({
+      title: 'Tip',
+      desc: msg,
+      duration: 3,
+    })
   }
 })
 

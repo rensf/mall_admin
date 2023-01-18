@@ -162,6 +162,25 @@ export default [{
     ]
   },
   {
+    path: '/chat_room',
+    name: 'chat_room',
+    meta: {
+      hideInBread: true,
+      icon: 'md-chatboxes',
+      title: '聊天室'
+    },
+    component: Main,
+    children: [{
+      path: 'chat_room',
+      name: 'chat_room',
+      meta: {
+        icon: 'md-chatboxes',
+        title: '聊天室'
+      },
+      component: () => import('@/view/chat-room/chat-room.vue')
+    }]
+  },
+  {
     path: '/401',
     name: 'error_401',
     meta: {

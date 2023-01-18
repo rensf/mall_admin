@@ -1,7 +1,3 @@
-<style lang="less">
-  @import './login.less';
-</style>
-
 <template>
   <div class="login">
     <div class="login-con">
@@ -16,30 +12,29 @@
 </template>
 
 <script>
-import LoginForm from '_c/login-form'
-import { mapActions } from 'vuex'
+import LoginForm from "_c/login-form";
+import { mapActions } from "vuex";
 export default {
   components: {
-    LoginForm
+    LoginForm,
   },
   methods: {
-    ...mapActions([
-      'handleLogin',
-      'getUserInfo'
-    ]),
-    handleSubmit ({ userName, password }) {
-      this.handleLogin({ userName, password }).then(res => {
-        this.getUserInfo().then(res => {
+    ...mapActions(["handleLogin", "getUserInfo"]),
+    handleSubmit({ adminName, password }) {
+      this.$postRequest("/auth/oauth/token", { adminName, password }).then(
+        (res) => {
+          let data = res.data.result;
+          this.$store.commit("setToken", data.adminName);
           this.$router.push({
             name: this.$config.homeName
           })
-        })
-      })
-    }
-  }
-}
+        }
+      );
+    },
+  },
+};
 </script>
 
-<style>
-
+<style lang="less">
+@import "./login.less";
 </style>

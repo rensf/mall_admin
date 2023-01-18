@@ -185,7 +185,7 @@ export default {
   },
   methods: {
     queryConfig() {
-      this.$getRequest("/config/queryConfigList", this.queryForm).then(
+      this.$getRequest("/config/config/queryConfigList", this.queryForm).then(
         (res) => {
           this.data = res.data.result.records;
         }
@@ -195,7 +195,7 @@ export default {
       this.showModal = true;
     },
     confirmCommit() {
-      this.$postRequest("/config/addConfig", this.configForm).then((res) => {
+      this.$postRequest("/config/config/addConfig", this.configForm).then((res) => {
         this.showModal = false;
         this.$refs["configForm"].resetFields();
       });
@@ -205,7 +205,7 @@ export default {
       this.$refs["configForm"].resetFields();
     },
     refreshConfig() {
-      this.$getRequest("/config/refreshConfig").then((res) => {
+      this.$getRequest("/config/config/refreshConfig").then((res) => {
         if (res.data === 204) {
           this.$Notice.success({
             title: "Tip",
@@ -220,7 +220,7 @@ export default {
     },
     saveUpdate(v) {
       this.configForm = v;
-      this.$putRequest("/config/updateConfig", this.configForm).then(() => {
+      this.$putRequest("/config/config/updateConfig", this.configForm).then(() => {
         this.editIndex = -1;
       });
     },
@@ -229,7 +229,7 @@ export default {
         title: "确认删除",
         content: "您确认要删除该记录吗?",
         onOk: () => {
-          this.$deleteRequest("/config/deleteConfig", v).then(() => {
+          this.$deleteRequest("/config/config/deleteConfig", v).then(() => {
             this.queryConfig();
           });
         },

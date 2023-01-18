@@ -1,17 +1,19 @@
 <template>
   <div class="upload">
-    <div
-      v-if="showList"
-      class="upload-image"
-      :style="{
-        width: uploadWidth + 'px',
-        height: uploadHeight + 'px',
-        lineHeight: uploadHeight + 'px',
-      }"
-      v-for="item in list"
-    >
-      <img :src="viewUrl + item" />
-      <Icon type="md-close" @click="handleDelete(item)"></Icon>
+    <div v-if="showList">
+      <div
+        class="upload-image"
+        :style="{
+          width: uploadWidth + 'px',
+          height: uploadHeight + 'px',
+          lineHeight: uploadHeight + 'px',
+        }"
+        v-for="(item, index) in list"
+        :key="index"
+      >
+        <img :src="viewUrl + item" />
+        <Icon class="upload-image-icon" type="md-close" @click="handleDelete(item)"></Icon>
+      </div>
     </div>
     <Input v-if="!showList" class="upload-input" v-model="value"></Input>
     <Upload
@@ -113,10 +115,10 @@ export default {
 <style lang="less" scoped>
 .upload {
   display: flex;
-  position: relative;
 
   &-image {
     display: inline-block;
+    position: relative;
     text-align: center;
     border: 0 dashed transparent;
     border-radius: 4px;
@@ -133,10 +135,11 @@ export default {
 
     i {
       position: absolute;
-      top: -4px;
-      left: 50px;
-      border-radius: 50%;
-      background: #fff9b6;
+      top: 0;
+      left: 46px;
+      border-radius: 40%;
+      background: #ffddb6;
+      opacity: 75%;
       cursor: pointer;
     }
   }
