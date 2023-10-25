@@ -13,7 +13,7 @@ service.interceptors.request.use(config => {
   if (store.state.token) {
     config.headers.Authorization = store.state.token
   } else {
-    config.headers.Authorization = "Basic bWFsbC1hZG1pbg==" // base64明文：mall-amin
+    config.headers.Authorization = "Basic bWFsbC1hZG1pbjoxMjM0NTY=" // base64明文：mall-admin:123456
   }
   return config
 })

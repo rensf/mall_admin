@@ -20,14 +20,14 @@ export default {
   },
   methods: {
     ...mapActions(["handleLogin", "getUserInfo"]),
-    handleSubmit({ adminName, password }) {
-      this.$postRequest("/auth/oauth/token", { adminName, password }).then(
+    handleSubmit({ username, password, grant_type }) {
+      this.$postRequest("/auth/oauth/token", { username, password, grant_type }).then(
         (res) => {
           let data = res.data.result;
-          this.$store.commit("setToken", data.adminName);
+          this.$store.commit("setToken", data.username);
           this.$router.push({
             name: this.$config.homeName
-          })
+          });
         }
       );
     },
