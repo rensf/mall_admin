@@ -63,7 +63,7 @@ export default {
           this.$emit('on-success-valid', {
             username: this.form.username,
             password: this.form.password,
-            grant_type: 'admin_password'
+            grant_type: 'sys_password'
           })
         }
       })

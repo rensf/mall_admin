@@ -24,7 +24,7 @@ export default {
       this.$postRequest("/auth/oauth/token", { username, password, grant_type }).then(
         (res) => {
           let data = res.data.result;
-          this.$store.commit("setToken", data.username);
+          this.$store.commit("setToken", data.token_type + ' ' + data.access_token);
           this.$router.push({
             name: this.$config.homeName
           });

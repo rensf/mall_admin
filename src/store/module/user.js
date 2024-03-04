@@ -2,6 +2,9 @@ import {
   setToken,
   getToken
 } from '@/libs/util'
+import {
+  getRequest
+} from '@/api'
 
 export default {
   state: {
@@ -76,12 +79,11 @@ export default {
     handleLogin({
       commit
     }, {
-      userName,
-      password
+      token
     }) {
-      userName = userName.trim()
+      token = token.trim()
       return new Promise((resolve, reject) => {
-        commit('setToken', userName)
+        commit('setToken', token)
         resolve()
       })
     },
@@ -103,12 +105,15 @@ export default {
       commit
     }) {
       return new Promise((resolve, reject) => {
-        commit('setAvatar', '')
-        commit('setUserName', 'super_admin')
-        commit('setUserId', '001')
-        commit('setAccess', 0)
-        commit('setHasGetInfo', true)
-        resolve()
+        getRequest("/system/admin/getLoginAdminInfo").then(res => {
+          let data = res.data.result
+          commit('setAvatar', '')
+          commit('setUserName', data.adminName)
+          commit('setUserId', data.adminId)
+          commit('setAccess', 0)
+          commit('setHasGetInfo', true)
+          resolve()
+        })
       })
     },
     // 此方法用来获取未读消息条数，接口只返回数值，不返回消息列表

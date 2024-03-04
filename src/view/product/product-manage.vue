@@ -28,7 +28,7 @@
         ref="productForm"
         :model="productForm"
         :label-width="80"
-        :label-colon="true"
+        label-colon
       >
         <FormItem label="产品名称" prop="productName">
           <Input
@@ -112,6 +112,7 @@
         <Button type="primary" @click="confirmCommit">确认</Button>
       </div>
     </Modal>
+    <ProductAttrManage v-model="showProductAttrManage" :product-id="checkedProductId"></ProductAttrManage>
   </div>
 </template>
 
@@ -119,10 +120,12 @@
 import { array2Tree } from "@/libs/tools";
 import TreeSelect from "_c/tree-select";
 import UploadFile from "_c/upload-file";
+import ProductAttrManage from "./product-attr-manage.vue";
 export default {
   components: {
     TreeSelect,
     UploadFile,
+    ProductAttrManage,
   },
   data() {
     return {
@@ -174,7 +177,7 @@ export default {
           title: "操作",
           key: "action",
           align: "center",
-          width: 200,
+          minWidth: 300,
           render: (h, params) => {
             return h("div", [
               h(
@@ -199,6 +202,24 @@ export default {
                 "Button",
                 {
                   props: {
+                    type: "primary",
+                    size: "small",
+                  },
+                  style: {
+                    marginRight: "10px",
+                  },
+                  on: {
+                    click: () => {
+                      this.handleProductAttr(params.row.productId);
+                    }
+                  }
+                },
+                "添加属性"
+              ),
+              h(
+                "Button",
+                {
+                  props: {
                     type: "error",
                     size: "small",
                   },
@@ -214,6 +235,8 @@ export default {
       productForm: {},
       modalTitle: "",
       showModal: false,
+      showProductAttrManage: false,
+      checkedProductId: '',
       queryForm: {
         current: 1,
         total: 0,
@@ -315,6 +338,10 @@ export default {
     handleHomeSuccess(res) {
       if (!this.productForm.homeImages) this.productForm.homeImages = [];
       this.productForm.homeImages.push(res);
+    },
+    handleProductAttr(productId) {
+      this.checkedProductId = productId
+      this.showProductAttrManage = true;
     },
   },
 };

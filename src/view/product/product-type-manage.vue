@@ -122,7 +122,7 @@ export default {
   },
   methods: {
     queryType() {
-      this.$getRequest("/product/product/queryProductTypeList").then((res) => {
+      this.$getRequest("/product/productType/queryProductTypeList").then((res) => {
         this.type = res.data.result;
         let map = {};
         this.type.forEach((item) => {
@@ -142,7 +142,7 @@ export default {
         if (this.typeForm.productTypeLevel === "1") {
           this.typeForm.productParentTypeId = "";
         }
-        this.$putRequest("/product/product/updateProductType", this.typeForm).then(
+        this.$putRequest("/product/productType/updateProductType", this.typeForm).then(
           (res) => {
             if (res.data.result) {
               this.queryType();
@@ -153,7 +153,7 @@ export default {
           }
         );
       } else {
-        this.$postRequest("/product/product/addProductType", this.typeForm).then(
+        this.$postRequest("/product/productType/addProductType", this.typeForm).then(
           (res) => {
             if (res.data.result) {
               this.queryType();
@@ -185,7 +185,7 @@ export default {
         content: "您确认要删除该记录吗?",
         onOk: () => {
           this.$deleteRequest(
-            "/product/product/deleteProductType",
+            "/product/productType/deleteProductType",
             this.contextData
           ).then((res) => {
             if (res.data.result) {
