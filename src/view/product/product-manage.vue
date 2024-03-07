@@ -122,6 +122,7 @@ import TreeSelect from "_c/tree-select";
 import UploadFile from "_c/upload-file";
 import ProductAttrManage from "./product-attr-manage.vue";
 export default {
+  name: "ProductManage",
   components: {
     TreeSelect,
     UploadFile,
@@ -214,7 +215,7 @@ export default {
                     }
                   }
                 },
-                "添加属性"
+                "管理属性"
               ),
               h(
                 "Button",
@@ -273,19 +274,6 @@ export default {
     },
     updateProduct(v) {
       this.productForm = JSON.parse(JSON.stringify(v));
-
-      if (this.productForm.typeId)
-        this.productForm.typeIds = this.productForm.typeId.split(",");
-      else this.productForm.typeIds = [];
-
-      if (this.productForm.image) {
-        this.productForm.images = this.productForm.image.split(",");
-      } else this.productForm.images = [];
-
-      if (this.productForm.homeImage) {
-        this.productForm.homeImages = this.productForm.homeImage.split(",");
-      } else this.productForm.homeImages = [];
-
       this.modalTitle = "更新产品信息";
       this.showModal = true;
     },
