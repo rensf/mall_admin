@@ -11,7 +11,7 @@
         v-for="(item, index) in list"
         :key="index"
       >
-        <img :src="viewUrl + item" />
+        <AuthImg :authSrc="viewUrl + item" />
         <Icon class="upload-image-icon" type="md-close" @click="handleDelete(item)"></Icon>
       </div>
     </div>
@@ -40,8 +40,12 @@
 </template>
 
 <script>
+import AuthImg from '_c/auth-img';
 export default {
   name: "UploadFile",
+  components: {
+    AuthImg
+  },
   props: {
     showList: {
       type: Boolean,
