@@ -162,7 +162,7 @@ export default {
           width: 100,
         },
         {
-          title: "优惠售价",
+          title: "折扣售价",
           key: "productDiscountPrice",
           align: "center",
           width: 100,

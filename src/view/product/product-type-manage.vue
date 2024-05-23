@@ -107,6 +107,7 @@
 <script>
 import { array2Tree } from "@/libs/tools";
 export default {
+  name: "ProductTypeManage",
   data() {
     return {
       type: [],
@@ -172,7 +173,6 @@ export default {
     },
     handleContextMenu(data) {
       this.contextData = data;
-      console.log(data)
     },
     updateType() {
       this.modalTitle = "更新产品类型";

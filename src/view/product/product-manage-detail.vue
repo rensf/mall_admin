@@ -1,10 +1,10 @@
 <template>
   <Modal
+    ref="productManageDetail"
     :styles="{ top: '30px' }"
-    :title="modalTitle"
-    v-model="showModal"
     :mask-closable="false"
-    @on-cancel="cancelCommit"
+    v-bind="$attrs"
+    v-on="$listeners"
   >
     <Form
       ref="productForm"
@@ -90,8 +90,8 @@
       </FormItem>
     </Form>
     <div slot="footer">
-      <Button @click="cancelCommit">取消</Button>
-      <Button type="primary" @click="confirmCommit">确认</Button>
+      <Button @click="cancel">取消</Button>
+      <Button type="primary" @click="confirm">确认</Button>
     </div>
   </Modal>
 </template>
@@ -99,8 +99,21 @@
 <script>
 export default {
   name: "ProductManageAdd",
+  props: [],
   data() {
     return {};
+  },
+  methods: {
+    cancel() {
+
+    },
+    confirm() {
+      this.$refs.productForm.validate((valid) => {
+        if (valid) {
+
+        }
+      });
+    },
   }
 };
 </script>
