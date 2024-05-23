@@ -31,8 +31,8 @@
         </FormItem>
         <FormItem label="产品属性值">
           <div v-if="item.widget === 2" class="product-attr-value-wrap">
-            <div class="product-attr-color" v-for="(attr, i) in item.productAttrValues" :key="i">
-              <ColorPicker class="product-attr-color-picker" v-model="item.productAttrValues[i]">
+            <div class="product-attr-color" v-for="(attr, i) in item.productAttrValueList" :key="i">
+              <ColorPicker class="product-attr-color-picker" v-model="item.productAttrValueList[i]">
               </ColorPicker>
               <Button
                 class="product-attr-color-btn"
@@ -51,9 +51,9 @@
           <div v-else class="product-attr-value-wrap">
             <Input
               class="product-attr-input"
-              v-for="(attr, i) in item.productAttrValues"
+              v-for="(attr, i) in item.productAttrValueList"
               :key="i"
-              v-model="item.productAttrValues[i]"
+              v-model="item.productAttrValueList[i]"
             >
               <div slot="append">
                 <Button
@@ -122,17 +122,17 @@ export default {
     addProductAttr() {
       this.productAttrs.push({
         productAttrName: "",
-        productAttrValues: []
+        productAttrValueList: []
       });
     },
     delProductAttr(index) {
       this.productAttrs.splice(index, 1);
     },
     addProductAttrValue(index) {
-      this.productAttrs[index].productAttrValues.push("");
+      this.productAttrs[index].productAttrValueList.push("");
     },
     delProductAttrValue(index, i) {
-      this.productAttrs[index].productAttrValues.splice(i, 1);
+      this.productAttrs[index].productAttrValueList.splice(i, 1);
     }
   }
 };
