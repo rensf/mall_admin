@@ -95,11 +95,11 @@ export default {
   methods: {
     watchVisible(visible) {
       if (visible) {
-        this.queryProductAttrs();
+        this.queryProductAttrList();
       }
     },
-    queryProductAttrs() {
-      this.$getRequest("/product/productAttr/queryProductAttrs", {
+    queryProductAttrList() {
+      this.$getRequest("/product/productAttr/queryProductAttrList", {
         productId: this.productId
       }).then(res => {
         this.productAttrs = res.data.result;
@@ -115,7 +115,7 @@ export default {
       ).then(res => {
         if (res.data.result) {
           this.$refs["productAttrManage"].close();
-          this.queryProductAttrs();
+          this.queryProductAttrList();
         }
       });
     },
