@@ -142,6 +142,15 @@ export default [{
     },
     component: Main,
     children: [{
+        path: 'stock_manage',
+        name: 'stock_manage',
+        meta: {
+          icon: 'md-cube',
+          title: '库存管理'
+        },
+        component: () => import('@/view/stock/stock-manage.vue')
+      },
+      {
         path: 'stock_in_manage',
         name: 'stock_in_manage',
         meta: {

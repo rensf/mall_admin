@@ -43,7 +43,9 @@ router.beforeEach((to, from, next) => {
       name: homeName // 跳转到homeName页
     });
   } else {
-    store.dispatch("getUserInfo");
+    if (!store.state.user.hasGetInfo) {
+      store.dispatch('getUserInfo');
+    }
     next();
     // if (store.state.user.hasGetInfo) {
     //   turnTo(to, store.state.user.access, next)
