@@ -26,8 +26,23 @@ export default {
         { title: "操作", key: "action", align: "center", width: 200 },
       ],
       data: [],
+      queryOrderForm: {
+        current: 1,
+        total: 0,
+        size: 10
+      },
     };
   },
+  mounted() {
+    this.queryOrderList();
+  },
+  methods: {
+    queryOrderList() {
+      this.$getRequest("/order/order/queryOrderList", this.queryOrderForm).then((res) => {
+        this.data = res.data.result.records;
+      });
+    }
+  }
 };
 </script>
 
