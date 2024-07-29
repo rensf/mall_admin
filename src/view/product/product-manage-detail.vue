@@ -19,10 +19,10 @@
           placeholder="请输入产品名称"
         ></Input>
       </FormItem>
-      <FormItem label="产品类型" prop="typeIds">
+      <FormItem label="产品类型" prop="typeIdList">
         <Tree-Select
           :data="type"
-          v-model="productForm.typeIds"
+          v-model="productForm.typeIdList"
           placeholder="请选择产品类型"
         ></Tree-Select>
       </FormItem>
@@ -60,7 +60,7 @@
       <FormItem label="产品图片">
         <Upload-File
           type="drag"
-          :list="productForm.images"
+          :list="productForm.imageList"
           :show-upload-list="false"
           view-url="/api/product/product/viewProductImage/"
           delete-url="/product/product/deleteProductImage/"
@@ -79,7 +79,7 @@
       <FormItem v-if="productForm.productFirst" label="首页图片">
         <Upload-File
           type="drag"
-          :list="productForm.homeImages"
+          :list="productForm.homeImageList"
           :max-length="1"
           :show-upload-list="false"
           view-url="/api/product/product/viewProductImage/"
